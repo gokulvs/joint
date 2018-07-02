@@ -4,9 +4,9 @@ var ExpressPeerServer = require('peer').ExpressPeerServer;
 app.use(express.static('public'))
 
 app.get('/', function(req, res, next) { res.send('Hello world!'); });
-
-var server =  app.listen(8000,()=>{
-    console.log("APP STARTED ON 8000");
+const PORT = process.env.PORT || 9000
+var server =  app.listen(PORT,()=>{
+    console.log("APP STARTED ON "+PORT);
 });
 
 var options = {
