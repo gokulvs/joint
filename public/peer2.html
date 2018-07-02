@@ -37,8 +37,8 @@
             call.on('stream', function(remoteStream) {
                 console.log("streaming remote");
                     // Show stream in some video/canvas element.
-                    window.stream = stream; // make stream available to browser console
-                    video.srcObject = stream;
+                    window.stream = remoteStream; // make stream available to browser console
+                    video.srcObject = remoteStream;
                 });
         },function(err){
             console.log(err);
