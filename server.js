@@ -6,7 +6,7 @@ app.use(express.static('public'))
 
 app.get('/', function(req, res, next) { res.send('Hello world!'); });
 
-var server = app.listen(9000,function(err,data){
+var server = app.listen(process.env.PORT || 8080,function(err,data){
     console.log("server up and running");
 });
 
