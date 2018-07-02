@@ -13,7 +13,16 @@
             "port": 443,
             "secure": true,
             "path": "peerjs",
-            "debug": 3
+            "debug": 3,
+            'iceServers': [
+                { url: 'stun:stun.ekiga.net' },
+                { url: 'stun:stun1.l.google.com:19302' },
+                { url: 'stun:stun2.l.google.com:19302' },
+                { url: 'stun:stun3.l.google.com:19302' },
+                { url: 'stun:stun4.l.google.com:19302' },
+                { url: 'stun:stun01.sipphone.com' },
+                { url: 'stun:stun.l.google.com:19302' }
+            ]
         });
         var video = document.querySelector('video');
         peer.on('open', function(id) {
