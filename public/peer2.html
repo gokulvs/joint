@@ -6,7 +6,8 @@
 
 <body>
     <input type="text" id="connectID" placeholder="Enter dest id" /><button type="button" onclick="callServer()">Call</button>
-    <video autoplay></video>
+    <video  id="myVideo" style="width:100px;display:inline-block" autoplay></video>
+    <video id="theirVideo" autoplay></video>
     <script>
         var peer = new Peer({
             "host": "jointserv.herokuapp.com",
@@ -24,12 +25,21 @@
                 { url: 'stun:stun.l.google.com:19302' }
             ]
         });
-        var video = document.querySelector('video');
+        var myVideo = document.getElementById('myVideo');
+        var theirVideo = document.getElementById('theirVideo');
         peer.on('open', function(id) {
             console.log('My peer ID is: ' + id);
         });
+        peer.on('connection', function(conn) {
+            conn.on('data', function(data){
+            // Will print 'hi!'
+            
+                console.log(data);
 
+            });
+        }); 
 
+var getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia).bind(navigator);
 
         function callServer() {
             var party1 = document.getElementById("connectID").value;
@@ -41,10 +51,10 @@
                 conn.send('hi!');
             });
 
-            var getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia).bind(navigator);
+            
             getUserMedia({
                 video: true,
-                audio: true
+                audio: false
             }, function(stream) {
                 console.log("calling");
                 var call = peer.call(party1, stream);
@@ -52,7 +62,8 @@
                     console.log("streaming remote");
                     // Show stream in some video/canvas element.
                     window.stream = remoteStream; // make stream available to browser console
-                    video.srcObject = remoteStream;
+                    theirVideo.srcObject = remoteStream;
+                    myVideo.srcObject = stream;
                 });
             }, function(err) {
                 console.log(err);

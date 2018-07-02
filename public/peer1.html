@@ -1,75 +1,94 @@
 <html>
-    <head>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/0.3.14/peer.js"></script>
-    </head>
-    <body>
-            <video autoplay></video>
-            <div id="groupID"></div>
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/0.3.14/peer.js"></script>
+</head>
+
+<body>
+    <video id="myVideo" style="width:100px;display:inline-block" autoplay></video>
+    <video id="theirVideo" autoplay></video>
+    <div id="groupID"></div>
 
     <script>
         //var canvas = window.canvas = document.querySelector('canvas');
-        var video = document.querySelector('video');
+        var myVideo = document.getElementById('myVideo');
+        var theirVideo = document.getElementById('theirVideo');
         //canvas.width = 480;
         //canvas.height = 360;
         var peer = new Peer({
-            "host":"jointserv.herokuapp.com",
-            "secure":true,
-            "port":443,
-            "path":"peerjs",
-            "debug":3,
-            'iceServers': [
-                { url: 'stun:stun.ekiga.net' },
-                { url: 'stun:stun1.l.google.com:19302' },
-                { url: 'stun:stun2.l.google.com:19302' },
-                { url: 'stun:stun3.l.google.com:19302' },
-                { url: 'stun:stun4.l.google.com:19302' },
-                { url: 'stun:stun01.sipphone.com' },
-                { url: 'stun:stun.l.google.com:19302' }
+            "host": "jointserv.herokuapp.com",
+            "port": 443,
+            "secure": true,
+            "path": "peerjs",
+            "debug": 3,
+            'iceServers': [{
+                    url: 'stun:stun.ekiga.net'
+                },
+                {
+                    url: 'stun:stun1.l.google.com:19302'
+                },
+                {
+                    url: 'stun:stun2.l.google.com:19302'
+                },
+                {
+                    url: 'stun:stun3.l.google.com:19302'
+                },
+                {
+                    url: 'stun:stun4.l.google.com:19302'
+                },
+                {
+                    url: 'stun:stun01.sipphone.com'
+                },
+                {
+                    url: 'stun:stun.l.google.com:19302'
+                }
             ]
-        }); 
-        peer.on('open', function(id) {
-            console.log('My peer ID is: ' + id);
-            document.getElementById("groupID").innerHTML=id;
         });
-        peer.on('connection', function(conn) {
-            conn.on('data', function(data){
-            // Will print 'hi!'
-            
+
+        peer.on('open', function (id) {
+            console.log('My peer ID is: ' + id);
+            document.getElementById("groupID").innerHTML = id;
+        });
+        peer.on('connection', function (conn) {
+            conn.on('data', function (data) {
+                // Will print 'hi!'
+
                 console.log(data);
 
             });
-        }); 
-        var getUserMedia =  (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia).bind(navigator);
+        });
+        var getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia).bind(
+            navigator);
         // getUserMedia({video: true, audio: true}, function(stream) {
         //     window.stream = stream; // make stream available to browser console
         //     video.srcObject = stream;
         // },function(err){
         //     console.log(err);
         // });
-        peer.on('call', function(call) {
+        peer.on('call', function (call) {
             // Answer the call, providing our mediaStream
-            console.log("Cal recieved");
-            getUserMedia({video: true, audio: true}, function(stream) {
-                console.log("Cal answering");
+            console.log("Cal recieved", call);
+            getUserMedia({
+                video: true,
+                audio: false
+            }, function (stream) {
+                console.log("Call answering",stream);
                 call.answer(stream);
-                
-                // canvas.width = video.videoWidth;
-                // canvas.height = video.videoHeight;
-                // canvas.getContext('2d').
-                //drawImage(video, 0, 0, canvas.width, canvas.height);
 
-                call.on('stream', function(remoteStream) {
+                call.on('stream', function (remoteStream) {
                     // Show stream in some video/canvas element.
-                    console.log("video streaming");
+                    console.log("video streaming", remoteStream);
                     window.stream = remoteStream; // make stream available to browser console
-                    video.srcObject = remoteStream;
+                    theirVideo.srcObject = remoteStream;
+                    myVideo.srcObject = stream;
+
                 });
-            },function(err){
-                console.log(err);
+            }, function (err) {
+                console.log("Error occured",err);
             });
-            
+
         });
-        
     </script>
-    </body>
+</body>
+
 </html>
