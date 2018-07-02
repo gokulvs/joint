@@ -1,0 +1,29 @@
+{
+    "name": "joint",
+    "version": "1.0.0",
+    "description": "app to get connected distributedly",
+    "main": "server.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node server.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/gokulvs/joint.git"
+    },
+    "keywords": [
+        "peer",
+        "to",
+        "peer",
+        "connection"
+    ],
+    "author": "gokulvs, rohithramachandran",
+    "license": "GPL-3.0",
+    "bugs": {
+        "url": "https://github.com/gokulvs/joint/issues"
+    },
+    "homepage": "https://github.com/gokulvs/joint#readme",
+    "dependencies": {
+        "peer": "^0.2.8"
+    }
+}
