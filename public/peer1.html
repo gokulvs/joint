@@ -1,0 +1,63 @@
+<html>
+    <head>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/0.3.14/peer.js"></script>
+    </head>
+    <body>
+            <video autoplay></video>
+            
+
+    <script>
+        //var canvas = window.canvas = document.querySelector('canvas');
+        var video = document.querySelector('video');
+        //canvas.width = 480;
+        //canvas.height = 360;
+        var peer = new Peer({
+            "host":"localhost",
+            "port":8000,
+            "path":"peerjs",
+            "debug":3,
+            id:"1234"
+        }); 
+        peer.on('open', function(id) {
+            console.log('My peer ID is: ' + id);
+        });
+        peer.on('connection', function(conn) {
+            conn.on('data', function(data){
+            // Will print 'hi!'
+                console.log(data);
+            });
+        }); 
+        var getUserMedia =  (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia).bind(navigator);
+        // getUserMedia({video: true, audio: true}, function(stream) {
+        //     window.stream = stream; // make stream available to browser console
+        //     video.srcObject = stream;
+        // },function(err){
+        //     console.log(err);
+        // });
+        peer.on('call', function(call) {
+            // Answer the call, providing our mediaStream
+            console.log("Cal recieved");
+            getUserMedia({video: true, audio: true}, function(stream) {
+                console.log("Cal answering");
+                call.answer(stream);
+                
+                // canvas.width = video.videoWidth;
+                // canvas.height = video.videoHeight;
+                // canvas.getContext('2d').
+                //drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                call.on('stream', function(remoteStream) {
+                    // Show stream in some video/canvas element.
+                    console.log("video streaming");
+                    window.stream = stream; // make stream available to browser console
+                    video.srcObject = stream;
+                });
+            },function(err){
+                console.log(err);
+            });
+            
+        });
+        
+    </script>
+    </body>
+</html>

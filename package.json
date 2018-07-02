@@ -24,6 +24,7 @@
     },
     "homepage": "https://github.com/gokulvs/joint#readme",
     "dependencies": {
+        "express": "^4.16.3",
         "peer": "^0.2.8"
     }
 }

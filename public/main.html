@@ -1,0 +1,63 @@
+<html>
+
+<head>
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>
+
+  <!-- CodeMirror -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.17.0/codemirror.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.17.0/codemirror.css" />
+
+  <!-- Firepad -->
+  <link rel="stylesheet" href="https://cdn.firebase.com/libs/firepad/1.5.0/firepad.css" />
+  <style>
+  </style>
+  <script src="https://cdn.firebase.com/libs/firepad/1.5.0/firepad.min.js"></script>
+
+
+</head>
+
+<body onload="init()">
+  <div id="firepad"></div>
+
+  <div>Share this link with your friend to access the same app <a>http://localhost:9090/</a></div>>
+  <script>
+    function getQueryStringValue (key) {  
+        return decodeURIComponent(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURIComponent(key).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));  
+      }
+    function init() {
+      // Initialize the Firebase SDK.
+      var token = getQueryStringValue("token");
+      var dBName=Math.floor(Math.random() * 9999999999).toString();
+      if(token && token!=""){
+        dBName=token;
+      }
+
+      var config = {
+        apiKey: "AIzaSyBZfs8xPaDEgnZlICbNv5m6tZokSU9ShUQ",
+        authDomain: "joint-b4413.firebaseapp.com",
+        databaseURL: "https://joint-b4413.firebaseio.com/"+dBName,
+        projectId: "joint-b4413"
+      };
+      firebase.initializeApp(config);
+
+      // Get Firebase Database reference.
+      var firepadRef = firebase.database().ref();
+
+      // Create CodeMirror (with lineWrapping on).
+      var codeMirror = CodeMirror(
+        document.getElementById('firepad'), {
+          lineWrapping: true
+        });
+
+      // Create Firepad (with rich text toolbar and shortcuts enabled).
+      var firepad = Firepad.fromCodeMirror(firepadRef, codeMirror, {
+        mode: "javascript",
+        richTextShortcuts: true,
+        richTextToolbar: true
+      });
+    }
+  </script>
+</body>
+
+</html>

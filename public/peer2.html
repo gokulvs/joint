@@ -1,0 +1,41 @@
+<html>
+    <head>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/0.3.14/peer.js"></script>
+    </head>
+    <body>
+            <video autoplay></video>
+    <script>
+        var peer = new Peer({
+            "host":"localhost",
+            "port":8000,
+            "path":"peerjs",
+            "debug":3,
+        }); 
+        var video = document.querySelector('video');
+        peer.on('open', function(id) {
+            console.log('My peer ID is: ' + id);
+        });
+        var conn = peer.connect('7rl9nrrt2s600000',{
+            "reliable":true
+        });
+        
+        conn.on('open', function(){
+            conn.send('hi!');
+        });
+        var getUserMedia =  (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia).bind(navigator);
+        getUserMedia({video: true, audio: true}, function(stream) {
+            console.log("calling");
+            var call = peer.call('7rl9nrrt2s600000',stream);
+            call.on('stream', function(remoteStream) {
+                console.log("streaming remote");
+                    // Show stream in some video/canvas element.
+                    window.stream = stream; // make stream available to browser console
+                    video.srcObject = stream;
+                });
+        },function(err){
+            console.log(err);
+        });
+        
+    </script>
+    </body>
+</html>
