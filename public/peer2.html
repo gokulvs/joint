@@ -54,7 +54,7 @@ var getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || na
             
             getUserMedia({
                 video: true,
-                audio: false
+                audio: true
             }, function(stream) {
                 console.log("calling");
                 var call = peer.call(party1, stream);

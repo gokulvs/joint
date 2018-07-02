@@ -70,7 +70,7 @@
             console.log("Cal recieved", call);
             getUserMedia({
                 video: true,
-                audio: false
+                audio: true
             }, function (stream) {
                 console.log("Call answering",stream);
                 call.answer(stream);
