@@ -4,7 +4,7 @@
     </head>
     <body>
             <video autoplay></video>
-            
+            <div id="groupID"></div>
 
     <script>
         //var canvas = window.canvas = document.querySelector('canvas');
@@ -12,19 +12,22 @@
         //canvas.width = 480;
         //canvas.height = 360;
         var peer = new Peer({
-            "host":"localhost",
-            "port":8000,
+            "host":"jointserv.herokuapp.com",
+            "secure":true,
+            "port":443,
             "path":"peerjs",
-            "debug":3,
-            id:"1234"
+            "debug":3
         }); 
         peer.on('open', function(id) {
             console.log('My peer ID is: ' + id);
+            document.getElementById("groupID").innerHTML=id;
         });
         peer.on('connection', function(conn) {
             conn.on('data', function(data){
             // Will print 'hi!'
+            
                 console.log(data);
+
             });
         }); 
         var getUserMedia =  (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia).bind(navigator);

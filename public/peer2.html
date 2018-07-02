@@ -3,29 +3,37 @@
             <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/0.3.14/peer.js"></script>
     </head>
     <body>
+        <input type="text" id="connectID" placeholder="Enter dest id"/><button type="button" onclick="callServer()">Call</button>
             <video autoplay></video>
     <script>
         var peer = new Peer({
-            "host":"localhost",
-            "port":8000,
+            "host":"https://jointserv.herokuapp.com",
+            "port":443,
+            "secure":true,
             "path":"peerjs",
-            "debug":3,
+            "debug":3
         }); 
         var video = document.querySelector('video');
         peer.on('open', function(id) {
             console.log('My peer ID is: ' + id);
         });
-        var conn = peer.connect('7rl9nrrt2s600000',{
+        
+        
+        
+        function callServer(){
+            var party1=document.getElementById("connectID").value;
+            var conn = peer.connect(party1,{
             "reliable":true
         });
         
         conn.on('open', function(){
             conn.send('hi!');
         });
-        var getUserMedia =  (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia).bind(navigator);
+            
+            var getUserMedia =  (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia).bind(navigator);
         getUserMedia({video: true, audio: true}, function(stream) {
             console.log("calling");
-            var call = peer.call('7rl9nrrt2s600000',stream);
+            var call = peer.call(party1,stream);
             call.on('stream', function(remoteStream) {
                 console.log("streaming remote");
                     // Show stream in some video/canvas element.
@@ -35,7 +43,7 @@
         },function(err){
             console.log(err);
         });
-        
+        }
     </script>
     </body>
 </html>
