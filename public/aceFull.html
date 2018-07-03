@@ -156,11 +156,9 @@
       var getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia).bind(navigator);
       getUserMedia({
           video: true,
-          audio: true
+          audio: false
         },function (stream) {
           myVideo.srcObject = stream;
-          //theirVideo.srcObject = stream;
-          window.stream=stream;
         }, function (err) {
           console.log("Error occured ",err);
         }
@@ -300,32 +298,55 @@ function initiatePeerConn(peer,isMaster,masterPeer,theirVideo,hash){
       $(".chat-contents").append(theirChat);
     });
   });
-        if(isMaster){
+        if(isMaster==true){
           //if master recieve the call// else connect to the call
               peer.on('call', function (call) {
                 console.log("Call recieved", call);
-                call.answer(window.stream);
-                firebase.database().ref('/mappings/' + hash).once('value').then(function(snapshot) {
+                
+                var getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia).bind(navigator);
+            getUserMedia({
+              video: true,
+              audio: true
+            },function (stream) {
+              //myVideo.srcObject = stream;
+              call.answer(stream);
+              call.on('stream', function(remoteStream) {
+                theirVideo.srcObject = remoteStream;
+              });
+              firebase.database().ref('/mappings/' + hash).once('value').then(function(snapshot) {
                   childPeer = (snapshot.val() && snapshot.val().childPeer);
                   toChildConn = peer.connect(childPeer, {
                     "reliable": true
                   });
                 });
-                call.on('stream', function (remoteStream) {
-                // Show stream in some video/canvas element.
-                console.log("video streaming", remoteStream);
-                theirVideo.srcObject = remoteStream;
-              });
+
+            }, function (err) {
+              console.log("Error occured ",err);
+            }
+            );
             });
           }else{
             var conn = peer.connect(masterPeer, {
                   "reliable": true
             });
             console.log("dialling peer");
-            var call = peer.call(masterPeer, window.stream);
-            call.on('stream', function(remoteStream) {
-              theirVideo.srcObject = remoteStream;
-            });
+            var getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia).bind(navigator);
+            getUserMedia({
+              video: true,
+              audio: true
+            },function (stream) {
+              //myVideo.srcObject = stream;
+              var call = peer.call(masterPeer, stream);
+              call.on('stream', function(remoteStream) {
+                theirVideo.srcObject = remoteStream;
+              });
+            }, function (err) {
+              console.log("Error occured ",err);
+            }
+            );
+
+            
+            
           }
         
 }
