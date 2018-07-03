@@ -12,6 +12,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.5/mode-javascript.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.5/theme-textmate.js"></script>
   <script src="https://cdn.rawgit.com/peers/peerjs/master/dist/peer.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+  
 
   <!-- Firepad -->
   <link rel="stylesheet" href="https://cdn.firebase.com/libs/firepad/1.4.0/firepad.css" />
@@ -84,6 +86,16 @@
     .chat-box button{
       width: 20%;
     }
+    .my-chat{
+      height: 30px;
+    width: 97%;
+    background: #efefef;
+    margin-top: 4px;
+    text-align: left;
+    /* padding-left: 5px; */
+    padding: 5px;
+    border-radius: 10px;
+    }
   </style>
 </head>
 
@@ -98,7 +110,7 @@
 
             </div>
             <div class="chat-box">
-              <input type="text" placeholder="Enter message to send"/> <button>Send</button>
+              <input type="text" placeholder="Enter message to send" id="chatText"/> <button onclick="sendMessage()" type="button" >Send</button>
             </div>
           </div>  
     </div>
@@ -117,6 +129,8 @@
   
 
   <script>
+    var childPeer="";
+    var toChildConn;
     function init() {
       //// Initialize Firebase.
       //// TODO: replace with your Firebase project configuration.
@@ -185,15 +199,17 @@
             console.log('My peer ID is: ' + id);
             if(isMaster==false){
               console.log("getting mapping values >>",hash);
+              writeChildMapping(hash,id);
               firebase.database().ref('/mappings/' + hash).once('value').then(function(snapshot) {
                 masterPeer = (snapshot.val() && snapshot.val().masterPeer);
                 console.log("masterPeer is >> ",masterPeer);
-                initiatePeerConn(peer,isMaster,masterPeer,theirVideo);
+                initiatePeerConn(peer,isMaster,masterPeer,theirVideo,hash);
               });
             }else{
               masterPeer=id;
               writeMapping(hash,id);
-              initiatePeerConn(peer,isMaster,masterPeer,theirVideo);
+              
+              initiatePeerConn(peer,isMaster,masterPeer,theirVideo,hash);
             }
            // document.getElementById("groupID").innerHTML = id;
            
@@ -269,18 +285,32 @@
         masterPeer: peer
       });
 }
-function initiatePeerConn(peer,isMaster,masterPeer,theirVideo){
+function writeChildMapping(hash, peer){
+  console.log("writing child peer mapping data >>",hash,peer);
+      firebase.database().ref('mappings/' + hash).update({
+        childPeer: peer
+      });
+}
+function initiatePeerConn(peer,isMaster,masterPeer,theirVideo,hash){
   console.log("initiatePeerConn ",peer,isMaster,masterPeer,theirVideo);
   peer.on('connection', function (conn) {
-            conn.on('data', function (data) {
-                console.log(data);
-            });
+    conn.on('data', function (data) {
+      console.log(data);
+      var theirChat="<div class='their-chat'>"+data+"</div>";
+      $(".chat-contents").append(theirChat);
+    });
   });
-  if(isMaster){
+        if(isMaster){
           //if master recieve the call// else connect to the call
               peer.on('call', function (call) {
                 console.log("Call recieved", call);
                 call.answer(window.stream);
+                firebase.database().ref('/mappings/' + hash).once('value').then(function(snapshot) {
+                  childPeer = (snapshot.val() && snapshot.val().childPeer);
+                  toChildConn = peer.connect(childPeer, {
+                    "reliable": true
+                  });
+                });
                 call.on('stream', function (remoteStream) {
                 // Show stream in some video/canvas element.
                 console.log("video streaming", remoteStream);
@@ -299,7 +329,18 @@ function initiatePeerConn(peer,isMaster,masterPeer,theirVideo){
           }
         
 }
-
+function sendMessage(){
+  if(childPeer!="" && toChildConn){
+    
+    var chatText = document.getElementById("chatText").value;
+    toChildConn.send(chatText);
+    var myChat="<div class='my-chat'>"+chatText+"</div>";
+    $(".chat-contents").append(myChat);
+  }else{
+    console.log("child peer not found");
+  }
+  
+}
   </script>
 </body>
 </html>
