@@ -96,6 +96,16 @@
     padding: 5px;
     border-radius: 10px;
     }
+    .their-chat{
+      height: 30px;
+    width: 97%;
+    background: #ff9f9f;
+    margin-top: 4px;
+    text-align: left;
+    /* padding-left: 5px; */
+    padding: 5px;
+    border-radius: 10px;
+    }
   </style>
 </head>
 
@@ -131,6 +141,8 @@
   <script>
     var childPeer="";
     var toChildConn;
+    var toParentConn;
+    var isMaster=false;
     function init() {
       //// Initialize Firebase.
       //// TODO: replace with your Firebase project configuration.
@@ -147,7 +159,7 @@
       var obj = getExampleRef();
       var firepadRef=obj.ref;
       var hash=obj.hash;
-      var isMaster=obj.isMaster;
+      isMaster=obj.isMaster;
       console.log("firepadRef-hash-isMaster << ",firepadRef,hash,isMaster);
 
       
@@ -291,6 +303,7 @@ function writeChildMapping(hash, peer){
 }
 function initiatePeerConn(peer,isMaster,masterPeer,theirVideo,hash){
   console.log("initiatePeerConn ",peer,isMaster,masterPeer,theirVideo);
+  
   peer.on('connection', function (conn) {
     conn.on('data', function (data) {
       console.log(data);
@@ -312,13 +325,15 @@ function initiatePeerConn(peer,isMaster,masterPeer,theirVideo,hash){
               call.answer(stream);
               call.on('stream', function(remoteStream) {
                 theirVideo.srcObject = remoteStream;
-              });
-              firebase.database().ref('/mappings/' + hash).once('value').then(function(snapshot) {
+                firebase.database().ref('/mappings/' + hash).once('value').then(function(snapshot) {
                   childPeer = (snapshot.val() && snapshot.val().childPeer);
+                  console.log("getting child peer conn",childPeer);
                   toChildConn = peer.connect(childPeer, {
                     "reliable": true
                   });
                 });
+              });
+              
 
             }, function (err) {
               console.log("Error occured ",err);
@@ -326,7 +341,7 @@ function initiatePeerConn(peer,isMaster,masterPeer,theirVideo,hash){
             );
             });
           }else{
-            var conn = peer.connect(masterPeer, {
+            toParentConn = peer.connect(masterPeer, {
                   "reliable": true
             });
             console.log("dialling peer");
@@ -351,16 +366,22 @@ function initiatePeerConn(peer,isMaster,masterPeer,theirVideo,hash){
         
 }
 function sendMessage(){
-  if(childPeer!="" && toChildConn){
-    
-    var chatText = document.getElementById("chatText").value;
-    toChildConn.send(chatText);
-    var myChat="<div class='my-chat'>"+chatText+"</div>";
-    $(".chat-contents").append(myChat);
+  if(isMaster==true){
+    if(childPeer!="" && toChildConn){
+      var chatText = document.getElementById("chatText").value;
+      toChildConn.send(chatText);
+        var myChat="<div class='my-chat'>"+chatText+"</div>";
+      $(".chat-contents").append(myChat);
+    }else{
+      console.log("child peer not found");
+    }
   }else{
-    console.log("child peer not found");
+      
+      var chatText = document.getElementById("chatText").value;
+      toParentConn.send(chatText);
+      var myChat="<div class='my-chat'>"+chatText+"</div>";
+      $(".chat-contents").append(myChat);
   }
-  
 }
   </script>
 </body>
