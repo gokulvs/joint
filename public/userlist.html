@@ -39,6 +39,10 @@
   <div id="userlist"></div>
   <div id="firepad"></div>
 
+  <div>
+    
+  </div>
+
   <script>
     function init() {
       //// Initialize Firebase.
@@ -51,6 +55,7 @@
         database:dBName,
         projectId: "joint-b4413"
       };
+      console.log("dBName",dBName);
       firebase.initializeApp(config);
 
       //// Get Firebase Database reference.
