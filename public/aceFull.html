@@ -8,9 +8,10 @@
   <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>
 
   <!-- ACE and its JavaScript mode and theme files -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.5/ace.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.5/mode-javascript.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.5/theme-textmate.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.3.3/ace.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.3.3/mode-javascript.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.3.3/theme-textmate.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.3.3/theme-dracula.js"></script>
   <script src="https://cdn.rawgit.com/peers/peerjs/master/dist/peer.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
   
@@ -26,7 +27,7 @@
 
   <style>
      html { height: 100%; }
-    body { margin: 0; height: 100%; position: relative; }
+    body { margin: 0; height: 100%; position: relative;    background: #282b36; }
     /* Height / width / positioning can be customized for your use case.
        For demo purposes, we make firepad fill the entire browser. */
     #firepad-container {
@@ -105,6 +106,9 @@
     /* padding-left: 5px; */
     padding: 5px;
     border-radius: 10px;
+    }
+    .powered-by-firepad{
+      display:none;
     }
   </style>
 </head>
@@ -247,16 +251,14 @@
       //    { richTextToolbar: true, richTextShortcuts: true, userId: userId});
 
       var editor = ace.edit("firepad");
-      editor.setTheme("ace/theme/textmate");
+      editor.setTheme("ace/theme/dracula");
       var session = editor.getSession();
       session.setUseWrapMode(true);
       session.setUseWorker(false);
       session.setMode("ace/mode/javascript");
 
       //// Create Firepad.
-      var firepad = Firepad.fromACE(firepadRef, editor, {
-        defaultText: '// JavaScript Editing with Firepad!\nfunction go() {\n  var message = "Hello, world.";\n  console.log(message);\n}'
-      });
+      var firepad = Firepad.fromACE(firepadRef, editor, {});
 
 
       //// Create FirepadUserList (with our desired userId).
@@ -266,7 +268,7 @@
       //// Initialize contents.
       firepad.on('ready', function() {
         if (firepad.isHistoryEmpty()) {
-          firepad.setText('Check out the user list to the left!');
+          firepad.setText('');
         }
       });
     }
