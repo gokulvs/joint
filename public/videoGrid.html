@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Joint</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="http://dsmorse.github.io/gridster.js/dist/jquery.gridster.min.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/videoGrid.css" />
+
+    <script src="https://cdn.rawgit.com/icons8/titanic/master/dist/js/titanic.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/4.5.9/bodymovin.min.js"></script>
+</head>
+
+<body>
+    <div class="triggers">
+        <div class="item reload">
+            <div class='titanic titanic-refresh-wait'></div>
+        </div>
+    </div>
+    <div class="gridster">
+        <ul class="animated">
+            <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
+                <video width="100%" height="100%" autoplay id="initial-video-out"></video>
+            </li>
+            <li data-row="2" data-col="1" data-sizex="1" data-sizey="1">
+                <video width="100%" height="100%" autoplay id="initial-video-incoming"></video>
+            </li>
+
+            <li data-row="1" data-col="2" data-sizex="1" data-sizey="1"></li>
+            <li data-row="2" data-col="2" data-sizex="1" data-sizey="1"></li>
+        </ul>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script src="http://dsmorse.github.io/gridster.js/dist/jquery.gridster.min.js"></script>
+    <script src="https://cdn.rawgit.com/peers/peerjs/master/dist/peer.min.js"></script>
+    <script src="js/velocity.min.js"></script>
+    <script type="text/javascript" src="videogrid.js"></script>
+    <script>
+        titanic = new Titanic({
+            baseURL: 'https://rawgit.com/icons8/titanic/master/src/icons/',
+            hover: false,
+            click: true
+        });
+    </script>
+</body>
+
+</html>
