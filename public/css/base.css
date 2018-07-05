@@ -1,5 +1,6 @@
 body {
-    font-family: 'Gaegu', cursive;
+    /* font-family: 'Gaegu', cursive; */
+    font-family: 'Roboto', sans-serif;
 }
 
 .background-wrapper {
@@ -20,14 +21,40 @@ body {
     position: absolute;
 }
 
+.awesome-text-big {
+    font-size: 100px;
+}
+
 .peer-intro {
-    width: 17%;
-    left: 10%;
-    top: 12%;
+    width: 25%;
+    left: 4%;
+    top: 1%;
 }
 
 .peer-other-intro {
     width: 17%;
     right: 18%;
     bottom: 16%;
+}
+
+.ml12 {
+    font-weight: 200;
+    font-size: 1.8em;
+    text-transform: uppercase;
+    letter-spacing: 0.5em;
+}
+
+.ml12 .letter {
+    display: inline-block;
+    line-height: 1em;
+}
+
+.button {
+    /* border: 5px solid #68caa1; */
+    text-decoration: none;
+    /* padding-left: 57px; */
+    color: #68caa1;
+    padding-right: 60px;
+    margin-top: 10px;
+    font-weight: bold;
 }
