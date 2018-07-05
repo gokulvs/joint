@@ -1,0 +1,33 @@
+body {
+    font-family: 'Gaegu', cursive;
+}
+
+.background-wrapper {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+}
+
+.background-wrapper svg {
+    width: 100%;
+    position: fixed;
+    bottom: -36px;
+    height: 220%;
+}
+
+.awesome-text {
+    font-size: 52px;
+    position: absolute;
+}
+
+.peer-intro {
+    width: 17%;
+    left: 10%;
+    top: 12%;
+}
+
+.peer-other-intro {
+    width: 17%;
+    right: 18%;
+    bottom: 16%;
+}
