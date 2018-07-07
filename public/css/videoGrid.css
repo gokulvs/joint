@@ -113,5 +113,18 @@ li {
     margin-bottom: 20px;
 }
 
+[class^='remove-video-view'] {
+    position: absolute;
+    z-index: 99;
+    top: 0px;
+    font-size: 32px;
+    left: 0px;
+    padding: 10px;
+}
+
+[class^='remove-video-view'] i {
+    color: red;
+}
+
 
 /*# sourceMappingURL=demos/assets/css/demo.css.map */

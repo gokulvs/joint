@@ -1,13 +1,51 @@
 var gridster = null;
 // var getUserMedia =navigator.mediaDevices?navigator.mediaDevices.getUserMedia:(navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia).bind(navigator);
+function* idGen(){
+    let gen = 100;
+    while(true){
+        yield "view-"+(gen++);
+    }
+}
+var VideoController = function(context){
+    this.state = {
+        userVideo : $('.initial-video-out')[0]
+    }
+    this.generator = idGen();
+    this.init();
+    this.context = context;
+};
+VideoController.prototype = {
+    init : function(){
+        this.events();
+    },
+    create : function(){
+        var id = this.generator.next().value;
+        console.log("id",id);
+        gridster.add_widget('<li class="'+id+'"><div class="remove-video-'+id+'"><i class="fa fa-phone" aria-hidden="true"></i></div><video width="100%" height="100%" autoplay></video></li>', 1, 1,1,1);
+        return $('li.'+id+' video')[0];
+    },
+    appendStream : function(stream){
+        console.log("stream : ",stream);
+        this.create().srcObject = stream;
+    },
+    events : function(){
+        $('.gridster ul').on('click','[class^="remove-video-"] i',(e)=>{
+            
+            this.endCall(id);
+            gridster.remove_widget($(e.target).parents('li')[0])
+        })
+    }
+}
 
-var App = function(){
+var App = function(videoController=VideoController){
     let STATE = {
         peer : null,
         peerId : null,
         connection : 'NO_CONNECTION',
         cntr : null
     }
+    this.callStack = {};
+    this.videoController =new  videoController(this);
     this.init();
 }
 App.prototype = {
@@ -15,11 +53,11 @@ App.prototype = {
     getState : function(){
         return this.STATE;
     },
-   _setState : function(state){
-        return {...this.STATE,...state};
+   _setState : function(orgState,newState){
+        return {...orgState,...newState};
    },
    updateState : function(state){
-       this.STATE =  this._setState(state);
+       this.STATE =  this._setState(this.STATE,state);
    },
    init : function(){
         this.initPeer();
@@ -100,6 +138,22 @@ App.prototype = {
             console.log("APP State - ",this.getState());
             this.updateBackground('#a5171752')
         });
+        var flag;
+        this.getState().peer.on('call',(call)=>{
+            console.log("got call");
+            this.getUserStream((stream)=>{
+                call.answer(stream);
+                call.on('stream',(remoteStream)=>{
+                    this.videoController.appendStream(remoteStream);
+                    if(!flag){
+                        this.videoController.appendStream(stream);
+                        flag = true;
+                    }
+                });
+            },(err)=>{
+                console.log("Failed to get user stream");
+            })
+        })
     },
     reConnectPeer : function(){
         try{
@@ -107,6 +161,9 @@ App.prototype = {
         }catch(e){
             console.log("Error reconnecting  : ",e);
         }
+    },
+    endCall = function(id){
+        this.callStack[id].close();
     },
     getUserStream  : (fun,errFn)=>{
         navigator.mediaDevices.getUserMedia({
