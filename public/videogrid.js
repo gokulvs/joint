@@ -6,22 +6,25 @@ function* idGen(){
         yield "view-"+(gen++);
     }
 }
-var VideoController = function(context){
+var VideoController = function(gridster){
     this.state = {
         userVideo : $('.initial-video-out')[0]
     }
     this.generator = idGen();
     this.init();
-    this.context = context;
+    this.gridster = gridster;
 };
 VideoController.prototype = {
     init : function(){
         this.events();
     },
+    videoGen : function(callMedia,stream){
+        
+    },
     create : function(){
         var id = this.generator.next().value;
         console.log("id",id);
-        gridster.add_widget('<li class="'+id+'"><div class="remove-video-'+id+'"><i class="fa fa-phone" aria-hidden="true"></i></div><video width="100%" height="100%" autoplay></video></li>', 1, 1,1,1);
+        this.gridster.add_widget('<li class="'+id+'"><div class="remove-video-'+id+'"><i class="fa fa-phone" aria-hidden="true"></i></div><video width="100%" height="100%" autoplay></video></li>', 1, 1,1,1);
         return $('li.'+id+' video')[0];
     },
     appendStream : function(stream){
@@ -30,7 +33,7 @@ VideoController.prototype = {
     },
     events : function(){
         $('.gridster ul').on('click','[class^="remove-video-"] i',(e)=>{
-            
+
             this.endCall(id);
             gridster.remove_widget($(e.target).parents('li')[0])
         })
@@ -140,13 +143,13 @@ App.prototype = {
         });
         var flag;
         this.getState().peer.on('call',(call)=>{
-            console.log("got call");
+            console.log("got call",);
             this.getUserStream((stream)=>{
                 call.answer(stream);
                 call.on('stream',(remoteStream)=>{
                     this.videoController.appendStream(remoteStream);
                     if(!flag){
-                        this.videoController.appendStream(stream);
+                        this.videoController.genVideo(call.peerId).appendStream(stream);
                         flag = true;
                     }
                 });
@@ -162,7 +165,7 @@ App.prototype = {
             console.log("Error reconnecting  : ",e);
         }
     },
-    endCall = function(id){
+    endCall  : function(id){
         this.callStack[id].close();
     },
     getUserStream  : (fun,errFn)=>{
