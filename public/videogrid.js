@@ -6,25 +6,48 @@ function* idGen(){
         yield "view-"+(gen++);
     }
 }
-var VideoController = function(gridster){
+var VideoController = function(gridster,callStack,notify){
     this.state = {
         userVideo : $('.initial-video-out')[0]
     }
     this.generator = idGen();
     this.init();
     this.gridster = gridster;
+    this.callStack = callStack;
+    this.notify = notify;
+    window.geticons = this.getIcons;
 };
 VideoController.prototype = {
     init : function(){
         this.events();
     },
     videoGen : function(callMedia,stream){
-        
+       const video =  this.create(callMedia?callMedia.peer:"userownstream");
+       if(callMedia){
+        this.callStack[callMedia.peer] = {
+            peer : callMedia,
+            video : video
+        };
+       }
+        console.log("callStack : ",this.callStack)
+        video.srcObject = stream;
     },
-    create : function(){
+    compose : function(...functions){
+        return (context={})=>functions.reduceRight((preReturn,fun)=>{
+            if(typeof preReturn == 'function'){
+                return fun(preReturn('',context),context);
+            }
+           return fun(preReturn,context)
+        })
+    },
+    getIcons : function(id){
+        const remove = (sub,context)=>'<div class="remove-video-view-'+context.id+'"><i class="fa fa-phone" aria-hidden="true"></i></div>'+sub
+        const wrapper = (sub,context)=>'<div class="icon-wrapper">'+sub+'</div>';
+        return (id=='userownstream')?'':this.compose(wrapper,remove)({id:id});
+    },
+    create : function(peerId){
         var id = this.generator.next().value;
-        console.log("id",id);
-        this.gridster.add_widget('<li class="'+id+'"><div class="remove-video-'+id+'"><i class="fa fa-phone" aria-hidden="true"></i></div><video width="100%" height="100%" autoplay></video></li>', 1, 1,1,1);
+        this.gridster.add_widget('<li class="'+id+'" data-peerId="'+peerId+'">'+this.getIcons(peerId)+'<video width="100%" height="100%" autoplay controls="true"></video></li>', 1, 1,1,1);
         return $('li.'+id+' video')[0];
     },
     appendStream : function(stream){
@@ -33,9 +56,19 @@ VideoController.prototype = {
     },
     events : function(){
         $('.gridster ul').on('click','[class^="remove-video-"] i',(e)=>{
-
-            this.endCall(id);
-            gridster.remove_widget($(e.target).parents('li')[0])
+            console.log(e.target);
+            if($(e.target).hasClass('fa-phone')){
+                const id = $(e.target).parents('li').attr('data-peerid')
+                this.notify('endCall',id);
+                gridster.remove_widget($(e.target).parents('li')[0])
+            }
+        })
+        $('.gridster ul').on('click','[class^="mute-video-"] i',(e)=>{
+            if($(e.target).hasClass('fa-volume-off')){
+                const id = $(e.target).parents('li').attr('data-peerid')
+                this.mute(id);
+                gridster.remove_widget($(e.target).parents('li')[0])
+            }
         })
     }
 }
@@ -48,7 +81,7 @@ var App = function(videoController=VideoController){
         cntr : null
     }
     this.callStack = {};
-    this.videoController =new  videoController(this);
+    this.videoController = new videoController(gridster,this.callStack,this.notify.bind(this));
     this.init();
 }
 App.prototype = {
@@ -61,6 +94,12 @@ App.prototype = {
    },
    updateState : function(state){
        this.STATE =  this._setState(this.STATE,state);
+   },
+   observers : {
+        'endCall' : function(peerId){
+            console.log(this);
+            this.callStack[peerId].peer.close();
+        }
    },
    init : function(){
         this.initPeer();
@@ -147,9 +186,9 @@ App.prototype = {
             this.getUserStream((stream)=>{
                 call.answer(stream);
                 call.on('stream',(remoteStream)=>{
-                    this.videoController.appendStream(remoteStream);
+                    this.videoController.videoGen(call,remoteStream);
                     if(!flag){
-                        this.videoController.genVideo(call.peerId).appendStream(stream);
+                        this.videoController.videoGen(null,stream);
                         flag = true;
                     }
                 });
@@ -157,6 +196,9 @@ App.prototype = {
                 console.log("Failed to get user stream");
             })
         })
+    },
+    notify : function(type,...args){
+        this.observers[type].call(this,...args);
     },
     reConnectPeer : function(){
         try{
@@ -189,7 +231,6 @@ App.prototype = {
 
 }
 
-var app = new App();
 
 !function(){
     let wWidth = screen.width,
@@ -211,6 +252,8 @@ var app = new App();
             axes : ['both']
         }
     }).data('gridster');
+
+    var app = new App();
 
     // app.getUserStream((stream)=>{
     //     userOwnVideo.srcObject = stream;

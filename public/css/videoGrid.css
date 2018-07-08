@@ -113,17 +113,26 @@ li {
     margin-bottom: 20px;
 }
 
-[class^='remove-video-view'] {
-    position: absolute;
-    z-index: 99;
-    top: 0px;
-    font-size: 32px;
-    left: 0px;
-    padding: 10px;
-}
+[class^='remove-video-view'] {}
 
 [class^='remove-video-view'] i {
     color: red;
+}
+
+.icon-wrapper {
+    position: absolute;
+    z-index: 10;
+    display: none;
+}
+
+.gridster li:hover .icon-wrapper {
+    display: block;
+}
+
+.icon-wrapper>div {
+    margin-left: 15px;
+    margin-top: 20px;
+    font-size: 25px;
 }
 
 
