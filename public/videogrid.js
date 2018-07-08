@@ -6,6 +6,46 @@ function* idGen(){
         yield "view-"+(gen++);
     }
 }
+var CodeEditor = function(){
+    this.state = {
+
+    }
+    this.init();
+}
+CodeEditor.prototype= {
+    init : function(){
+        var dBName=Math.floor(Math.random() * 9999999999).toString();
+        var config = {
+            apiKey: "AIzaSyBZfs8xPaDEgnZlICbNv5m6tZokSU9ShUQ",
+            authDomain: "joint-b4413.firebaseapp.com",
+            databaseURL: "https://joint-b4413.firebaseio.com",
+            database:dBName,
+            projectId: "joint-b4413"
+          };
+          firebase.initializeApp(config);
+    
+          // Get Firebase Database reference.
+          var firepadRef = firebase.database().ref();
+    
+          // Create Ace editor.
+          var editor = ace.edit('firepad');
+          editor.setTheme("ace/theme/dracula");
+            var session = editor.getSession();
+            session.setUseWrapMode(true);
+            session.setUseWorker(false);
+            session.setMode("ace/mode/javascript");
+
+    
+          // Create Firepad.
+          var firepad = Firepad.fromACE(firepadRef, editor);
+
+          firepad.on('ready', function() {
+            if (firepad.isHistoryEmpty()) {
+              firepad.setText('some');
+            }
+          });
+    }
+}
 var VideoController = function(gridster,callStack,notify){
     this.state = {
         userVideo : $('.initial-video-out')[0]
@@ -82,6 +122,7 @@ var App = function(videoController=VideoController){
     }
     this.callStack = {};
     this.videoController = new videoController(gridster,this.callStack,this.notify.bind(this));
+    this.codeEditor = new CodeEditor();
     this.init();
 }
 App.prototype = {
@@ -241,6 +282,9 @@ App.prototype = {
         minRows = Math.ceil(wHeight/baseHeight);
     
     const userOwnVideo = document.querySelector('#initial-video-out');
+
+   
+    
     gridster = $(".gridster ul").gridster({
         widget_base_dimensions: [baseWidth , baseHeight],
         min_cols : minCols,

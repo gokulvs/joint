@@ -135,5 +135,13 @@ li {
     font-size: 25px;
 }
 
+.firepad {
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    z-index: 99;
+    /* dark orange background */
+}
+
 
 /*# sourceMappingURL=demos/assets/css/demo.css.map */
