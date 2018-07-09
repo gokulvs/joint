@@ -152,7 +152,7 @@ App.prototype = {
         this.updateState({
             ctnr : document.querySelector('.gridster > ul')
         })
-        this.enableReloadTrigger();
+        this.enableTrigger();
     },
     initPeer : function(){
         this.updateState({
@@ -251,6 +251,38 @@ App.prototype = {
     endCall  : function(id){
         this.callStack[id].close();
     },
+    initiateCall : function(peerId){
+        const connection = this.getState().peer.connect(peerId,{
+            "reliable": true
+        });
+        this.getUserStream((stream)=>{
+            const call = this.getState().peer.call(peerId,stream);
+            call.on('stream',(remoteStream)=>{
+                this.videoController.videoGen(call,remoteStream);
+            });
+        },(err)=>{
+
+        })
+    },
+    makeCall : function(){
+        var dialog = $('<div class="peerid-input"><input type="text" id="peerid-prompt" placeholder="Enter remote Peer Id"/></div>');
+        dialog.find('input').keypress((e)=>{
+            if(e.which == 13){
+                if($('#peerid-prompt').val().trim()!=""){
+                    this.initiateCall($('#peerid-prompt').val());
+                    Velocity(dialog[0],{
+                        opacity : 0
+                    },{
+                        duration:100,
+                        complete : ()=>{
+                            dialog.remove();
+                        }
+                    })
+                }
+            }
+        })
+        $('.call').append(dialog);
+    },
     getUserStream  : (fun,errFn)=>{
         navigator.mediaDevices.getUserMedia({
             video :{ facingMode: "user" },
@@ -263,10 +295,25 @@ App.prototype = {
     updateBackground : function(color){
         document.querySelector('.gridster > ul').style.backgroundColor  = color;
     },
-    enableReloadTrigger : function(){
-       $('.reload').on('click','svg',()=>{
-           console.log("reloading ... ",this);
+    enableTrigger : function(){
+       $('.reload i').on('click',(e)=>{
+           console.log("reloading ... ",e.target);
            this.reConnectPeer();
+           Velocity(e.target,{
+               fontSize : '100px'
+           },{
+               duration : 60,
+               complete : ()=>{
+                   Velocity(e.target,{
+                       fontSize: '70px'
+                   },{
+                    duration : 60,
+                   })
+               }
+           })
+       });
+       $('.call i').on('click',(e)=>{
+           this.makeCall();
        });
     }
 
