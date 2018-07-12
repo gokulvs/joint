@@ -8,12 +8,54 @@ function* idGen(){
 }
 var CodeEditor = function(){
     this.state = {
+        data : '',
+        elms :[{
+            elem : document.querySelector('#code-block'),
+            title : 'Text',
+            mode : 'javascript'
+        },{
+            elem : document.querySelector('#css-block'),
+            title : 'css',
+            mode : 'text/css'
+        }],
+        editors : []
+    };
 
-    }
-    this.init();
+    return this.init();
 }
 CodeEditor.prototype= {
     init : function(){
+       this.codeMirrorInit();
+       this.events();
+    },
+    codeMirrorInit : function(){
+        // return CodeMirror(this.state.elm, {
+        //     value: "function myScript(){return 100;}\n",
+        //     mode:  "javascript",
+        //     lineNumbers: true
+        // });
+        // The codeMirror editor object
+        console.log(this);
+        this.state.elms.map((editor)=>{
+           this.state.editors.push(CodeMirror.fromTextArea(
+                editor.elem, 
+                {
+                    lineNumbers     : true,
+                    lineWrapping    : true,
+                    matchBrackets: true,
+                    theme           : "dracula",
+                    tabSize         : 4,
+                    indentUnit      : 4,
+                    value: "function myScript(){return 100;}\n",
+                    mode:  editor.mode
+                })
+            )
+        })
+    },
+    refresh : function(){
+        this.editor.refresh();
+    },
+    aceEditorInit : function(){
         var dBName=Math.floor(Math.random() * 9999999999).toString();
         var config = {
             apiKey: "AIzaSyBZfs8xPaDEgnZlICbNv5m6tZokSU9ShUQ",
@@ -44,6 +86,13 @@ CodeEditor.prototype= {
               firepad.setText('some');
             }
           });
+    },
+    events : function(){
+        this.state.editors.map((editor)=>{
+            editor.on('change',(cm,data)=>{
+                console.log(data);
+            })
+        })
     }
 }
 var VideoController = function(gridster,callStack,notify){
@@ -120,9 +169,10 @@ var App = function(videoController=VideoController){
         connection : 'NO_CONNECTION',
         cntr : null
     }
+
     this.callStack = {};
     this.videoController = new videoController(gridster,this.callStack,this.notify.bind(this));
-    this.codeEditor = new CodeEditor();
+    this.editor = new CodeEditor();
     this.init();
 }
 App.prototype = {
@@ -265,6 +315,10 @@ App.prototype = {
         })
     },
     makeCall : function(){
+        const input = document.querySelector('.peerid-input');
+        if(input){
+            input.parentNode.removeChild(input)
+        }
         var dialog = $('<div class="peerid-input"><input type="text" id="peerid-prompt" placeholder="Enter remote Peer Id"/></div>');
         dialog.find('input').keypress((e)=>{
             if(e.which == 13){
@@ -315,7 +369,14 @@ App.prototype = {
        $('.call i').on('click',(e)=>{
            this.makeCall();
        });
-    }
+    },
+    // toggleIcons : function* (icons,elem){
+    //     let i =0;
+    //     while(i<icons.length){
+    //         yield icons[i++]
+    //         i == icons.length && (i = 0);
+    //     }
+    // }
 
 }
 
@@ -340,7 +401,10 @@ App.prototype = {
         helper: 'clone',
         resize: {
             enabled: true,
-            axes : ['both']
+            axes : ['both'],
+            resize : function(){
+                app.editor.refresh();
+            }
         }
     }).data('gridster');
 

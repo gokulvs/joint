@@ -9,19 +9,10 @@
     <link rel="stylesheet" type="text/css" media="screen" href="https://dsmorse.github.io/gridster.js/dist/jquery.gridster.min.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="css/videoGrid.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.39.0/codemirror.min.css" />
+    <link rel="stylesheet" type="text/css" medi="screen" href="https://codemirror.net/theme/dracula.css" />
     <script src="https://cdn.rawgit.com/icons8/titanic/master/dist/js/titanic.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/4.5.9/bodymovin.min.js"></script>
-
-    <!-- Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>
-
-    <!-- Ace -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.5/ace.js"></script>
-
-    <!-- Firepad -->
-    <link rel="stylesheet" href="https://cdn.firebase.com/libs/firepad/1.4.0/firepad.css" />
-    <script src="https://cdn.firebase.com/libs/firepad/1.4.0/firepad.min.js"></script>
-
 </head>
 
 <body>
@@ -40,15 +31,33 @@
             </li>
 
             <li data-row="1" data-col="2" data-sizex="1" data-sizey="1">
-                <div id="firepad"></div>
+                <div id="editor" style="width:100%;height:100%">
+                    <!-- <textarea id="editorarea"></textarea> -->
+                    <textarea id="code-block"></textarea>
+                </div>
             </li>
             <li data-row="2" data-col="2" data-sizex="1" data-sizey="1"></li>
         </ul>
     </div>
-
+    <div class="code-area">
+        <div class="container">
+            <div class="left">
+                <textarea id="code-block"></textarea>
+            </div>
+            <div class="middle">
+                <textarea id="css-block"></textarea>
+            </div>
+            <!-- <div class="right"></div> -->
+        </div>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
     <script src="https://dsmorse.github.io/gridster.js/dist/jquery.gridster.min.js"></script>
     <script src="https://cdn.rawgit.com/peers/peerjs/master/dist/peer.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.39.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.39.0/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.39.0/mode/css/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.39.0/addon/runmode/colorize.min.js"></script>
+
     <script src="js/velocity.min.js"></script>
     <script type="text/javascript" src="videogrid.js"></script>
     <script>
