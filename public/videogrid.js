@@ -13,10 +13,6 @@ var CodeEditor = function(){
             elem : document.querySelector('#code-block'),
             title : 'Text',
             mode : 'javascript'
-        },{
-            elem : document.querySelector('#css-block'),
-            title : 'css',
-            mode : 'text/css'
         }],
         editors : []
     };

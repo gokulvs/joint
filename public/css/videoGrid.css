@@ -18,11 +18,18 @@ p {
 }
 
 .triggers {
+    border-radius: 15px;
+    cursor: move;
     position: absolute;
-    right: 0px;
-    top: 0px;
+    right: 10px;
+    top: 10px;
     z-index: 99;
     padding: 30px;
+    padding-top: 0px;
+    background: #fff;
+    border-bottom-right-radius: 15px;
+    border-bottom-left-radius: 15px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 }
 
 .item {
@@ -115,6 +122,7 @@ table {
     margin: 0px;
     padding: 0px;
     width: 100% !important;
+    min-height: 100vh;
 }
 
 .gridster li {
