@@ -1,0 +1,258 @@
+<html>
+
+<head>
+    <link href="sparklingStar.css" rel="stylesheet">
+    <!-- <link href="https://fonts.googleapis.com/css?family=Knewave" rel="stylesheet"> -->
+    <!-- <link href="https://fonts.googleapis.com/css?family=Indie+Flower" rel="stylesheet"> -->
+    <link href="https://fonts.googleapis.com/css?family=Merienda" rel="stylesheet">
+    <style>
+        body {
+            /* font-family: 'Knewave', cursive; */
+            /* font-family: 'Indie Flower', cursive; */
+            font-family: 'Merienda', cursive;
+            overflow: hidden;
+        }
+
+        .heading {
+            position: absolute;
+            color: white;
+            z-index: 10000;
+            font-size: 95px;
+            /* margin-left: 20px; */
+            width: 100%;
+            text-align: center;
+            margin-top: 10%;
+        }
+
+        .hero-text {
+            position: absolute;
+            color: white;
+            z-index: 10000;
+            font-size: 35px;
+            /* left: 25%; */
+            width: 100%;
+            top: 40%;
+            text-align: center;
+        }
+
+        button {
+            background: transparent;
+            color: white;
+            font-family: inherit;
+            padding: 10px;
+            font-size: 25px;
+            margin: 30px;
+            margin-top: 5%;
+            cursor: pointer;
+        }
+
+        .typewriter {
+            display: flex;
+            justify-content: center;
+        }
+
+        .typewriter span {
+            color: #fff;
+            overflow: hidden;
+            /* Ensures the content is not revealed until the animation */
+            border-right: .15em solid orange;
+            /* The typwriter cursor */
+            white-space: nowrap;
+            /* Keeps the content on a single line */
+            margin: 0 auto;
+            /* Gives that scrolling effect as the typing happens */
+            /* letter-spacing: .15em; Adjust as needed */
+            animation: typing 3.5s steps(30, end),
+            blink-caret .5s step-end infinite;
+        }
+
+        /* The typing effect */
+
+        @keyframes typing {
+            from {
+                width: 0
+            }
+            to {
+                width: 100%
+            }
+        }
+
+        /* The typewriter cursor effect */
+
+        @keyframes blink-caret {
+            from,
+            to {
+                border-color: transparent
+            }
+            50% {
+                border-color: orange
+            }
+        }
+
+        .home-buttons {
+            margin-top: 25%;
+            position: absolute;
+            z-index: 1000;
+            width: 100%;
+            text-align: center;
+        }
+        .join-meeting-card{
+            
+    width: 50%;
+    height: 340px;
+    position: absolute;
+    top: 0px;
+    z-index: 10000;
+    left: 30%;
+        }
+        .join-meeting-card >div{
+            background: white;
+    height: 100%;
+    width: 100%;
+    margin-top: 25%;
+    border-radius: 5px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+        }
+        .join-meeting-card input{
+            padding: 10px;
+    margin-top: 26px;
+    text-align: center;
+    font-size: 22px;
+    width: 45%;
+    background: yellow;
+    border: 0pc;
+    border-bottom: 1px solid gray;
+        }
+        .join-meeting-card button{
+            color: black;
+    text-decoration: underline;
+    font-size: 12px;
+    border: 0px;
+    font-weight: bold;
+    font-size: 26px;
+    margin-top: 0px;
+        }
+        .accelerate {
+            transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+            transform-origin: 50% 0%;
+  -webkit-transform: translate3d(0,0,0);
+  -moz-transform: translate3d(0,0,0);
+  transform: translate3d(0,0,0);
+  -webkit-transform-style: preserve-3d;
+  -moz-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  backface-visibility: hidden; 
+  perspective: 1000px;
+  }
+  .hide{
+    /* transform: rotateX(-120deg); */
+    transform: translate3d(0,-10%,0) rotateX(-90deg);
+  }
+
+        .join-meeting-card::after{
+            background: transparent url(http://matthew.wagerfield.com/parallax/assets/images/cable.png) 0 0 no-repeat;
+    left: 0%;
+    position: absolute;
+    /* display: block; */
+    height: 855px;
+    width: 30px;
+    content: "";
+    top: -669px;
+    z-index: 1000;
+        }
+        .join-meeting-card::before{
+            background: transparent url(http://matthew.wagerfield.com/parallax/assets/images/cable.png) 0 0 no-repeat;
+    left: 95%;
+    position: absolute;
+    /* display: block; */
+    height: 855px;
+    width: 30px;
+    content: "";
+    top: -669px;
+    z-index: 1000;
+        }
+        .cancel-join-box{    
+            color: #ef7a7a !important;
+    font-family: sans-serif !important;
+    text-decoration: none !important;
+    border: 2px solid #ef7a7a !important;
+    border-radius: 50% !important;
+    width: 50px !important;
+    height: 50px !important;
+    line-height: 29px !important;
+    text-align: center!important;
+}
+.bottom-ellipsis{
+    position: absolute;
+    bottom: -112%;
+    background: white;
+    height: 124%;
+    border-radius: 100%;
+    z-index: 1000;
+}
+    </style>
+</head>
+
+<body >
+    <div class="stars"></div>
+    <div class="twinkling"></div>
+    <div class="heading">
+        JOINT
+    </div>
+    <div class="hero-text typewriter">
+        <span>We stand to connect with any one , any where , any time for free</span>
+
+    </div>
+    <div id="scene" class="home-buttons">
+        <button>Host a meeting </button>
+        <button type="button" class="join-meeting">Join a meeting </button>
+    </div>
+    <div class="join-meeting-card accelerate hide">
+        <div>
+            <div style="    font-size: 17px;">You can join the meeting by entring the meeting code below</div>
+            <input type="text" placeholder="Enter Meeting Code Here"/>
+            <button type="button">JOIN</button>
+            <button type="button" class="cancel-join-box">X</button>
+        </div>
+    </div>
+    <div class="bottom-ellipsis">
+            <div style="text-align: center;
+            margin-top: 2.5%;
+            cursor: pointer;
+            text-decoration: underline;">
+                Know more about Joint
+            </div>
+            <div style="visibility: hidden;">
+                    Joint is a distributed web-rtc based video chatting platform for interviewers to conduct interviews.
+                    There is no middleman between the calling and called parties.
+                    Joint now supports video based chatting along with code editing.
+                    We eliminate the hustle of giving callees skype or hangout ID to the interviewer.
+                    So your personal chat account are not required to be shared to the interviewee.
+                    We are providing a code editing platform which supports more that 20+ Languages
+                </div>
+    </div>
+   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+    <script>
+    $(document).ready(function(){
+        //var scene = document.getElementById('scene');//$("#scene");
+        //var parallaxInstance = new Parallax(scene);
+        $(".join-meeting").click(function(){
+            $(".join-meeting-card").toggleClass("hide");
+
+        });
+        $(".cancel-join-box").click(function(){
+            $(".join-meeting-card").toggleClass("hide");
+        });
+    });
+    </script>
+</body>
+
+</html>
