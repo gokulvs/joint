@@ -1,8 +1,18 @@
 var express = require('express');
 var app = express();
 var ExpressPeerServer = require('peer').ExpressPeerServer;
+// var sassMiddleware = require('node-sass-middleware');
+// var path = require('path');
 
-app.use(express.static('public'))
+// var srcPath = __dirname + '/public/scss';
+// var destPath = __dirname + '/public/styles';
+// app.use(sassMiddleware({
+//     src: srcPath,
+//     dest: destPath,
+//     debug: true,
+//     outputStyle: 'expanded'
+//   }));
+app.use(express.static('public'));
 
 app.get('/', function(req, res, next) { res.send('Hello world!'); });
 
