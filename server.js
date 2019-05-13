@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var ExpressPeerServer = require('peer').ExpressPeerServer;
 
-app.use(express.static('public'))
+app.use(express.static(__dirname+'/public'))
 
 app.get('/', function(req, res, next) { res.send('Hello world!'); });
 
