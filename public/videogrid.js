@@ -165,7 +165,7 @@ var App = function(videoController=VideoController){
         connection : 'NO_CONNECTION',
         cntr : null
     }
-
+    this.titleElem = $('#titleIdTag');
     this.callStack = {};
     this.videoController = new videoController(gridster,this.callStack,this.notify.bind(this));
     this.editor = new CodeEditor();
@@ -181,6 +181,7 @@ App.prototype = {
    },
    updateState : function(state){
        this.STATE =  this._setState(this.STATE,state);
+       this.render();
    },
    observers : {
         'endCall' : function(peerId){
@@ -197,7 +198,7 @@ App.prototype = {
     initElems : function(){
         this.updateState({
             ctnr : document.querySelector('.gridster > ul')
-        })
+        });
         this.enableTrigger();
     },
     initPeer : function(){
@@ -373,6 +374,10 @@ App.prototype = {
     //         i == icons.length && (i = 0);
     //     }
     // }
+    render : function(){
+        const titleId = this.getState().peerId;
+        this.titleElem.empty().append(titleId);
+    }
 
 }
 
